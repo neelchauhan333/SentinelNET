@@ -1,0 +1,71 @@
+/* dashboard/styles.css */
+body {
+  font-family: Inter, Arial, sans-serif;
+  margin: 0;
+  background: #0b1220;
+  color: #e6eef8;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: linear-gradient(90deg,#07102a,#0f1b3a);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.container {
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+}
+
+.col-left { }
+.col-right { position: sticky; top: 10px; }
+
+section { margin-bottom: 18px; background: #07102a; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); }
+
+h3 { margin: 0 0 8px 0; color: #cfe5ff; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; color: #dbeafe; }
+
+table thead th { text-align: left; padding: 8px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+table tbody td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.02); }
+
+.card { padding: 12px; border-radius: 10px; margin-bottom: 8px; text-align: center; font-weight: 600; }
+
+.cards { display: flex; flex-direction: column; gap: 10px; }
+
+#card-safe { background: rgba(34,197,94,0.12); color: #a7f3d0; }
+#card-susp { background: rgba(250,204,21,0.08); color: #fef3c7; }
+#card-high { background: rgba(239,68,68,0.12); color: #fecaca; }
+
+.action-btn {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #0ea5e9;
+  color: black;
+  font-weight: 600;
+}
+
+.action-btn.block { background: #ef4444; color: white; }
+.action-btn.unblock { background: #10b981; color: white; }
+
+select { width: 100%; padding: 6px; border-radius: 6px; background: #07102a; color: #e6eef8; border: 1px solid rgba(255,255,255,0.03); }
