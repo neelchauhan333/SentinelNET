@@ -1,88 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SentinelNet Dashboard</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelNet - Cyber Defense Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <nav class="navbar">
-    <h2>SentinelNet Cyber Defense Dashboard</h2>
-    <div>
-      <button onclick="fetchAll()">Refresh Data</button>
-    </div>
-  </nav>
 
-  <div class="container grid">
-    <div class="col-left">
-      <section>
-        <h3>Connected Devices</h3>
-        <table id="deviceTable">
-          <thead>
-            <tr>
-              <th>Device ID</th>
-              <th>IP Address</th>
-              <th>MAC Address</th>
-              <th>Hostname</th>
-              <th>Last Seen</th>
-              <th>Status</th>
-              <th>Risk</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
 
-      <section>
-        <h3>Security Events</h3>
-        <table id="eventTable">
-          <thead>
-            <tr>
-              <th>Event ID</th>
-              <th>Device ID</th>
-              <th>Type</th>
-              <th>Time</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
-    </div>
-
-    <div class="col-right">
-      <section>
-        <h3>Risk Summary</h3>
-        <div class="cards">
-          <div class="card" id="card-safe">Safe<br><span id="safe-count">0</span></div>
-          <div class="card" id="card-susp">Suspicious<br><span id="susp-count">0</span></div>
-          <div class="card" id="card-high">High Risk<br><span id="high-count">0</span></div>
+    <!-- Device Details Modal -->
+    <div id="deviceModal" class="modal-backdrop">
+        <div class="modal-box">
+            <button class="modal-x-btn" onclick="closeModal()">✕</button>
+            <div id="modalContent"></div>
         </div>
-      </section>
-
-      <section>
-        <h3>Top Risky Devices</h3>
-        <table id="riskTable">
-          <thead>
-            <tr><th>Device</th><th>Score</th><th>Reason</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </section>
-
-      <section>
-        <h3>Risk Timeline</h3>
-        <label for="deviceSelect">Select Device:</label>
-        <select id="deviceSelect" onchange="drawSelectedDeviceChart()"></select>
-        <canvas id="riskChart" width="400" height="250"></canvas>
-      </section>
     </div>
-  </div>
 
-  <script src="dashboard.js"></script>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <h1>SentinelNet</h1>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="statusText">System Active</span>
+                </div>
+                <button class="simulate-btn" id="simulateBtn" onclick="simulateAttack()">
+                    🚨 Simulate Attack
+                </button>
+                <button class="export-btn" onclick="exportData()">
+                    📥 Export
+                </button>
+                <button class="refresh-btn" onclick="fetchAll()">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Risk Summary Cards -->
+        <div class="summary-cards">
+            <div class="card card-safe">
+                <div class="card-icon">✓</div>
+                <div class="card-content">
+                    <h3 id="safe-count">0</h3>
+                    <p>Safe Devices</p>
+                </div>
+            </div>
+            <div class="card card-warning">
+                <div class="card-icon">⚠</div>
+                <div class="card-content">
+                    <h3 id="susp-count">0</h3>
+                    <p>Suspicious</p>
+                </div>
+            </div>
+            <div class="card card-danger">
+                <div class="card-icon">⚡</div>
+                <div class="card-content">
+                    <h3 id="high-count">0</h3>
+                    <p>High Risk</p>
+                </div>
+            </div>
+            <div class="card card-total">
+                <div class="card-icon">📊</div>
+                <div class="card-content">
+                    <h3 id="total-count">0</h3>
+                    <p>Total Devices</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+
+            <!-- Left Column -->
+            <div class="left-column">
+
+                <!-- Connected Devices -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Connected Devices</h2>
+                        <div class="panel-header-right">
+                            <div class="search-wrap">
+                                <span class="search-icon">🔍</span>
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    class="search-input"
+                                    placeholder="Search by IP, hostname, type..."
+                                />
+                            </div>
+                            <span class="badge" id="device-count">0</span>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="deviceTable">
+                            <thead>
+                                <tr>
+                                    <th>IP Address</th>
+                                    <th>Hostname</th>
+                                    <th>Type</th>
+                                    <th>Risk</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="no-data">No devices detected</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-hint">💡 Click any row to view full device details</div>
+                </div>
+
+                <!-- Security Events -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Security Events</h2>
+                        <span class="badge" id="event-count">0</span>
+                    </div>
+                    <div class="table-container events-table">
+                        <table id="eventTable">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Device</th>
+                                    <th>Event Type</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="no-data">No events logged</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+
+                <!-- High Risk Devices -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>High Risk Devices</h2>
+                    </div>
+                    <div class="risk-list" id="riskList">
+                        <div class="no-data">All devices secure</div>
+                    </div>
+                </div>
+
+                <!-- Risk Timeline -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Risk Timeline</h2>
+                    </div>
+                    <div class="chart-container">
+                        <select id="deviceSelect" class="device-select" onchange="drawSelectedDeviceChart()">
+                            <option value="">Select device...</option>
+                        </select>
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="dashboard.js"></script>
 </body>
 </html>

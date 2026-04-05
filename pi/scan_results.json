@@ -1,0 +1,22 @@
+[
+  {
+    "device_id": "B8DD71B6A2F6",
+    "ip_address": "192.168.1.1",
+    "mac_address": "B8:DD:71:B6:A2:F6",
+    "hostname": "gpon.net",
+    "vendor": "Unknown Vendor",
+    "device_type": "Unknown Device",
+    "last_seen": "2026-04-05 20:24:54.809389",
+    "blocked_status": false
+  },
+  {
+    "device_id": "44FA66003911",
+    "ip_address": "192.168.1.7",
+    "mac_address": "44:FA:66:00:39:11",
+    "hostname": "DESKTOP-Q0OCJMV",
+    "vendor": "Unknown Vendor",
+    "device_type": "Computer",
+    "last_seen": "2026-04-05 20:24:54.796438",
+    "blocked_status": false
+  }
+]
